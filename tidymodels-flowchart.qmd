@@ -1,0 +1,22 @@
+---
+title: "tidymodels flowchart"
+format: html
+editor: visual
+---
+
+```{mermaid}
+graph TB
+    A[Start] --> B[Define Model **parsnip**]
+    B --> C[Preprocess Data **recipes**]
+    C --> D[Create Resampling Data **rsample**]
+    D --> E[Specify Tuning Parameters **dials**]
+    E --> F[Build Workflow **workflows**]
+    F --> G[Tune Model **tune**]
+    G --> H[Evaluate Model **yardstick**]
+    H --> I[Finalize Model]
+    I --> J[Make Predictions **parsnip** or **workflows**]
+    J --> K[End]
+    K[end] --> A[start]
+
+```
+

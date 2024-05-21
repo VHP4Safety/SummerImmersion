@@ -1,0 +1,82 @@
+---
+title: "Machine Learning with R"
+subtitle: "Workshop Contents"
+author: "Marc A.T. Teunis, PhD"
+format:
+  revealjs: 
+    theme: dark
+editor: visual
+execute:
+  echo: true
+---
+
+## Quarto
+
+ - Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+ - This slideshow was created using Quatro presentation file format from RStudio with R version: `r R.Version()` 
+
+## Packages {.bigger}
+
+```{r, error=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(tidymodels)
+library(skimr)
+```
+
+## Workshop Contents
+
+ 1. Introduction to `{tidymodels}`
+ 2. Single split data; logistic regression
+ 3. Same data, multiple folds, tuning hyperparamters, Random Forest
+ 4. Exercise, different data -> DIY
+ 5. Case demo -> DIY
+
+## Data
+
+ - Dataset with mutagens and non-mutagens
+ - Obtained from https://github.com/simonpcouch/mutagen
+ - Glimpse at the data
+
+```{r}
+load(
+ here::here(
+   "data-raw",
+   "mutagen_tbl.Rda"
+ )
+)
+```
+ 
+## Mutagen data 
+
+Let's look at the first 5 variables
+
+```{r}
+mutagen_tbl[ , c(1:5)] |>
+  glimpse()
+```
+
+## Tidymodels workflow
+
+ 1. Exploratory Data Analysis 
+ 1. `Split` data into training and test datasets
+ 1. Create a model `specification` (model type and hyperparameter settings)
+ 1. Create a `recipe` with model `formula` and pre-processing `steps`
+ 1. Create `workflow` holding the `specification` and the `recipe`
+ 1. `tune` the model for hyperparameter values
+ 1. `fit` the model on the training dataset
+ 1. `fit` the model on the test dataset
+ 1. Evaluate the model, using performance metrics
+
+## Two modelling runs on the same data
+
+ 1. Single splits, no tuning
+ 2. Multiple splits with tuning
+ 
+ ## Let's start
+ 
+  1. Clone the repo: https://github.com/eurotox-2023-aitox-cec/course-materials
+  
+  ```
+  ## run in Terminal
+  git clone
+  ```
