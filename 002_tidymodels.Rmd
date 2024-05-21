@@ -9,14 +9,10 @@
 load(here::here(
   "course_urls.RData"))
 les <- 2
-base_folder <- here::here(
-  "machine-learning-with-r"
-)
 ```
 
 ```{r, tidymodels_hex, echo=FALSE, message=FALSE, out.width = "50%", fig.align = "center"}
 knitr::include_graphics(here::here(
-  base_folder,
   "images",
   "tidymodels.svg"))
 ```
@@ -69,7 +65,6 @@ A dataset from [Github](https://github.com/simonpcouch/mutagen).
 ```{r, load_mutagen_data}
 load(
  here::here(
-   base_folder,
    "data-raw",
    "mutagen_tbl.Rda"
  )
@@ -109,7 +104,6 @@ The code below downloads the data to a the `./data-raw` folder and unzips the fi
 
 ```{r, download_qsar_data}
 path <- here::here(
-  base_folder,
   "data-raw",
   "qsar_oral_toxicity.zip"
 )
@@ -154,7 +148,6 @@ Here is a visual that may help in understanding the role and nature of the steps
 ```{r, tidymodels_packages_diagram}
 knitr::include_graphics(
   here::here(
-    base_folder,
     "images",
     "tidymodels-pkgs.png"
   )
@@ -189,7 +182,6 @@ The `mutagen` data was already fitted with a number of models. The Github repo c
 ```{r, load_mutagen_models}
 load(
   here::here(
-  base_folder,
   "data",
   "mutagen",
   "data",
@@ -197,7 +189,6 @@ load(
   )
 
 load(here::here(
-  base_folder,
   "data",
   "mutagen",
   "data",
@@ -205,7 +196,6 @@ load(here::here(
   )
 
 load(here::here(
-  base_folder,
   "data",
   "mutagen",
   "data",
@@ -213,7 +203,6 @@ load(here::here(
   )
 
 load(here::here(
-  base_folder,
   "data",
   "mutagen",
   "data",
@@ -583,7 +572,6 @@ This step takes a longer time. I ran this on a 30 core machine with >400 Gb RAM,
 ## read regular_res from disk
 regular_res <- readr::read_rds(
   here::here(
-    base_folder,
     "data",
     "regular_res.rds"
   )
@@ -639,7 +627,6 @@ tictoc::toc(log = TRUE)
 write_rds(
   rf_mutagen_final_fit,
   here::here(
-    base_folder,
     "data",
     "rf_mutagen_final_fit.rds"
   )
@@ -648,7 +635,6 @@ write_rds(
 ## read from disk
 rf_mutagen_final_fit <- read_rds(
   here::here(
-    base_folder,
       "data",
       "rf_mutagen_final_fit.rds")
   )
@@ -713,7 +699,6 @@ where a, b, c and d are explained in the image below:
 ```{r, confusion_matrix_explained}
 knitr::include_graphics(
   here::here(
-    base_folder,
     "images",
     "conf_mat_spec_sele.png"
   )
@@ -939,7 +924,6 @@ tame_aug <-
 ## The data look like: 
 tame_aug %>%
   select(class, .pred_class, .pred_PFAS, .pred_Statins)
-
 
 ## Confusion table
  tame_aug %>%

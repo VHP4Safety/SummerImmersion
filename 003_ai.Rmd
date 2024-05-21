@@ -14,9 +14,7 @@ use_python(path_to_python)
 load(here::here(
   "course_urls.RData"))
 les <- 3
-base_folder <- here::here(
-  "machine-learning-with-r"
-)
+
 ```
 
 
@@ -59,14 +57,12 @@ library(keras)
 ```{r}
 substances <- read_csv(
   here::here(
-    base_folder,
     "data-raw",
     "substances.csv")) |>
   janitor::clean_names()
 
 acute_data <- read_csv(
     here::here(
-      base_folder,
       "data-raw",
       "acute_tox_data.csv")) |>
   janitor::clean_names()
@@ -75,7 +71,7 @@ acute_data <- read_csv(
 
 ## Remove duplicated SMILES
 Because we want to predict toxicity (class and continuous outcome of LD50_LM), we need to solve the issue of duplicated SMILES. Some smiles will have a label 'nontoxic', where that same smile will have a label 'toxic' when connected to a different compound. This can be problematic, because it will lead to ambiguous label - to - feature correlations.
-To solve this, I decided to just remove all observations from the data that have a duplicated SMILES. 
+To solve this, I decided to just remove all observations from the data that have a duplicated SMILES. Note that this is an easy shortcut and you should spend more time to investigate the duplication problem to decide which SMILES can be removed.
 ```{r}
 ind <- duplicated(substances$qsar_ready_smiles)
 sum(ind)  
@@ -204,7 +200,7 @@ model %>% compile(
 history <- model %>% 
   fit(training_data, 
       training_labels_class,
-      epochs = 50,
+      epochs = 10,
       verbose = 2,
   validation_split = 0.2
 )
@@ -350,14 +346,12 @@ The data file with ChemBERTa embeddings was created using a python script which 
 ```{r}
 # Define the path to your .tar.gz file
 file_path <- here::here(
-  base_folder,
   "data-raw",
   "chembert_embeddings.tar.gz"
 )
 
 # Define the directory where you want to extract the files
 extraction_directory <- here::here(
-  base_folder,
   "data"
 )
 
@@ -369,7 +363,6 @@ untar(tarfile = file_path, exdir = extraction_directory)
 ## Read Chembert embeddings 
 ```{r}
 file <- here::here(
-  base_folder,
   "data", 
   "aspis_workshop_chembert_embeddings.csv"
   )
@@ -530,8 +523,7 @@ predictions |>
 ```
 
 ## Classic machine learning approach with reggression trees 
-It seems the ChemBERT embeddings did not improve our predictions (for now). How can we then make use of this new way of encoding. 
-First, we can use the ChemBERT embedding to create a more robust simulirity matrix, that can benefit read accross. We preformed 
+It seems the ChemBERT embeddings did not improve our predictions (for now). How can we then make use of this new way of encoding. First, we can use the ChemBERT embedding to create a more robust simularity matrix, that can benefit read accross. We preformed 
 We will demonstrate this with an example where we combine structural embeddings created with ChemBERT and a Natural Language Based biological enrichment, to perform read across. This concept is also presented on a poster during the ESTIV conference (poster: Abstract #492)
 
 Another possibility is to use these new embeddings to do a different, more classical modelling approach. Maybe bringing out the big gun of Deep Learning is not always the best option. Here we will explore if an XGBoost model, which is a variant of the regression tree models (such as Random Forest), can bring a better model to the table. 
@@ -597,10 +589,13 @@ predict(xgb_fit, chembert_test)
 
 
 ## Model eval
-xgb_fit %>% 
-  predict( new_data = chembert_test) %>% 
-  bind_cols(chembert_test["class"]) %>% 
-  accuracy(truth= as.factor(class), .pred_class) 
+# Assuming xgb_fit is a fitted xgboost model and chembert_test is your test data frame
+# Generate predictions
+predictions <- predict(xgb_fit, new_data = chembert_test)
+# Bind the predictions to the test data
+results <- bind_cols(chembert_test, predictions)
+# Calculate accuracy
+accuracy(results, truth = class, estimate = .pred_class)
 
 ## confusion matrix
 caret::confusionMatrix(
