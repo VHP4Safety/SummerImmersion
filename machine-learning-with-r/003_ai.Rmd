@@ -342,14 +342,37 @@ predictions |>
 ```
 
 ## Maybe we can do better when we use different embeddings
-Transformer foundation models have revolutionized Deep Learning over the past three years. They were first created and used to solve complex Natural Language Processing tasks. Now they are also used to create better representations for compounds, DNA and even for meta-genomics. Here we use the [ChemBERT model available from Hugging Face](https://huggingface.co/jiangg/chembert_cased) to create alternative structural embedding for our compounds, based on the 'QSAR ready SMILES'.
-The dataset containing the embeddings was too big to put in Github. It can be found and manually downloaded from a shared Google Drive: https://drive.google.com/file/d/1RX8hd4YZ37TDpDM095XcjS8oRuOZPFc_/view?usp=share_link 
-
-Download the file manually and upload it into the './data-raw' folder. The file is zipped via the .zip method. We need to unpack the file, before we can use it.
+Transformer foundation models have revolutionized Deep Learning over the past three years. They were first created and used to solve complex Natural Language Processing tasks. Now they are also used to create better representations for compounds, DNA and even for meta-genomics. Here we used the [ChemBERT model available from Hugging Face](https://huggingface.co/jiangg/chembert_cased) to create alternative structural embedding for our compounds, based on the 'QSAR ready SMILES'.
+The dataset containing the embeddings is here: `./machine-learning-with-r/data-raw/chembert_embeddings.tar.gz`. The archive a a gunzipped/tar archive and needs to be extracted first. We can do that using R.
 
 The data file with ChemBERTa embeddings was created using a python script which can be found in `./ChemBERT/chembert.py`. This folder also includes a `requirements.txt` file that can be used to create a reproducible Python environment. See e.g. [this resource](https://www.folkstalk.com/2022/09/conda-create-environment-based-on-requirements-txt-with-code-examples.html) on how to do that.
+
 ```{r}
-file <- here::here("data-raw", "aspis_workshop_chembert_embeddings.csv")
+# Define the path to your .tar.gz file
+file_path <- here::here(
+  base_folder,
+  "data-raw",
+  "chembert_embeddings.tar.gz"
+)
+
+# Define the directory where you want to extract the files
+extraction_directory <- here::here(
+  base_folder,
+  "data"
+)
+
+# Use the untar function to extract the files
+untar(tarfile = file_path, exdir = extraction_directory)
+
+```
+
+## Read Chembert embeddings 
+```{r}
+file <- here::here(
+  base_folder,
+  "data", 
+  "aspis_workshop_chembert_embeddings.csv"
+  )
 
 chembert <- read_csv(
   file
