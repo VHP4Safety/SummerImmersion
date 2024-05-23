@@ -669,6 +669,8 @@ We tune our parameters according the grid, over the data-folds we created. This 
 
 ## Read results from disk
 ```{r}
+library(tidymodels)
+library(tidyverse)
 xgb_res <- readr::read_rds(here::here("data", "xgb_res_chembert.rds"))
 xgb_res
 
@@ -687,10 +689,10 @@ xgb_res %>%
   facet_wrap(~mtry)
 
 xgb_res %>%
-  show_best("accuracy")
+  show_best(metric = "accuracy")
 
 best_boost <- xgb_res %>%
-  select_best("accuracy")
+  select_best(metric = "accuracy")
 
 final_wf <- 
   xgb_wf %>% 
@@ -705,7 +707,7 @@ final_fit$.metrics
 final_fit$.predictions
 
 final_fit$.predictions[[1]] %>% 
-  accuracy(truth= as.factor(class), .pred_class) 
+  accuracy(truth= class, .pred_class) 
 
 caret::confusionMatrix(
   final_fit$.predictions[[1]]$.pred_class, final_fit$.predictions[[1]]$class )
@@ -839,7 +841,7 @@ predict(svm_fit, chembert_test)
 svm_fit %>% 
   predict( new_data = chembert_test) %>% 
   bind_cols(chembert_test["class"]) %>% 
-  accuracy(truth= as.factor(class), .pred_class) 
+  accuracy(truth=class, .pred_class) 
 
 ## confusion matrix
 caret::confusionMatrix(
@@ -894,7 +896,7 @@ predict(svm_fit, fp_test)
 svm_fit %>% 
   predict( new_data = fp_test) %>% 
   bind_cols(fp_test["class"]) %>% 
-  accuracy(truth= as.factor(class), .pred_class) 
+  accuracy(truth= class, .pred_class) 
 
 ## confusion matrix
 caret::confusionMatrix(
